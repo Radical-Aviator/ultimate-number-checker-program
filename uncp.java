@@ -1,14 +1,28 @@
 /*
 Ultimate Number Checker Program:
-Available Number Testers:- (2)
-> Abundant Number
+Available Number Testers:-
+> Abundant Number:
     - Number where the sum of the factors of the number 
     (excluding the number itself) is greater than the number.
     Examples: 12; 18; 20 etc.
-> Automorphic Number
+> Armstrong Number:
+    - Number that is equal to the sum of the cube of its digits.
+    Examples: 153; 370; 407 etc. 
+> Automorphic Number:
     - Number when squared, has the original number in the same position.
     Examples: 5; 6; 76 etc.
-[Version 1.0 - 30 | 01 | 2024 -- Radical-Aviator]
+> Deficient Number:
+    - Number where the sum of the factors of the number
+    (excluding the number itself) is lesser than the number.
+    Examples: 8; 15; 27 etc.
+> Disarium Number:
+    - Number  that is equal to the sum of each of its digits
+    raised to the power of their position in the number.
+    Examples: 89; 175; 518 etc.
+> Harshad Number:
+    - Number that is divisible by the sum of its digits.
+    Examples: 18; 50; 216 etc.
+[Version 1.1 - 31 | 01 | 2024 -> 06 | 02 | 2024 -- Radical Aviator]
 */
 import java.util.*;
 class UltimateNumberCheckerProgram
@@ -67,12 +81,13 @@ class UltimateNumberCheckerProgram
         Factors = FactorsOfNumber(no);
         long Sum = 0;
         System.out.print("Factors of " + no + ": ");
-        for (int i = 0; i < (Factors.size() - 1); i++)
+        for (int i = 0; i < (Factors.size()); i++)
         {
             System.out.print("| " + (Factors.get(i)) + " |");
             Sum += (Factors.get(i));
         }
         System.out.println();
+        Sum -= no;
         return Sum;
     }
     
@@ -88,6 +103,32 @@ class UltimateNumberCheckerProgram
         else 
         {
             System.out.println(sum + " <= " + no);
+            return false;
+        }
+    }
+    static boolean IsNumberArmstrong (long no)
+    {
+        ArrayList<Long> Digits = new ArrayList<>();
+        Digits = DigitsOfNumber(no);
+        long cube_no;
+        long Sum = 0;
+        System.out.print("Digits: ");
+        for (int i = 0; i < (Digits.size()); i++)
+        {
+            System.out.print("| " + Digits.get(i) + " --> ");
+            cube_no = (long)(Math.pow((Digits.get(i)),3));
+            System.out.print(cube_no + " |");
+            Sum += cube_no;
+        }
+        System.out.println("\nSum = " + Sum);
+        if (Sum == no)
+        {
+            System.out.println(Sum + " = " + no);
+            return true;
+        }
+        else
+        {
+            System.out.println(Sum + " != " + no);
             return false;
         }
     }
@@ -109,7 +150,80 @@ class UltimateNumberCheckerProgram
             return false;
         }
     }
+    static boolean IsNumberDeficient (long no)
+    {
+        long sum = SumOfFactors(no);
+        System.out.println("Sum of Factors = " + sum);
+        if (sum < no)
+        {
+            System.out.println(sum + " < " + no);
+            return true;
+        }
+        else 
+        {
+            System.out.println(sum + " >= " + no);
+            return false;
+        }
+    }    
+    static boolean IsNumberDisarium (long no)
+    {
+        ArrayList<Long> Digits = new ArrayList<>();
+        Digits = DigitsOfNumber(no);
+        long digit;
+        int no_digits = NumberOfDigits(no);
+        int power;
+        long value;
+        long sum = 0;
+        System.out.print("Digits: ");
+        for (int i = no_digits - 1; i >= 0; i--)
+        {
+            digit = Digits.get(i);
+            System.out.print("|" + digit + "^");
+            power = no_digits - i;
+            System.out.print(power + " --> ");
+            value = (long)(Math.pow(digit, power));
+            System.out.print(value + "|");    
+            sum += value;
+        }
+        if ((long)sum == no)
+        {
+            System.out.println("\n" + sum + " = " + no);
+            return true;
+        }
+        else
+        {
+            System.out.println("\n" + sum + " != " + no);
+            return false;
+        }
+    }
     
+    static boolean IsNumberHarshad(long no)
+    {
+        ArrayList<Long> Digits = new ArrayList<>();
+        Digits = DigitsOfNumber(no);
+        int no_digits = NumberOfDigits(no);
+        long digit;
+        long s_factor = 0;
+        System.out.print("Digits:");
+        for (int i = 0; i <  no_digits; i++)
+        {
+            digit = Digits.get(i);
+            System.out.print("|" + digit + "|");
+            s_factor += digit;
+        }
+        System.out.println("\nSum of Digits = " + s_factor);
+        if (no % s_factor == 0)
+        {
+            System.out.println(s_factor + " is a factor of " + no);
+            System.out.println(no + " / " + s_factor + " = " + (no / s_factor));
+            return true;
+        }
+        else
+        {
+            System.out.println(s_factor + " is not a factor of " + no);
+            return false;
+        }
+    } 
     public static void main (String[]args)
     {
         System.out.print("\u000c");
@@ -123,17 +237,22 @@ class UltimateNumberCheckerProgram
             no = sc.nextLong();
             System.out.println("Enter Requested Tester: \t");
             System.out.println("1 - Abundant Number");
-            System.out.println("2 - Automorphic Number");
+            System.out.println("2 - Armstrong Number");
+            System.out.println("3 - Automorphic Number");
+            System.out.println("4 - Deficient Number");
+            System.out.println("5 - Disarium Number");
+            System.out.println("6 - Harshad Number \n");
             choice = sc.nextInt();
+            System.out.println();
             switch(choice)
             {
                 case 1:
-                    System.out.println("ABUNDANT NUMBER CHECKER");
+                    System.out.println("ABUNDANT NUMBER?");
                     boolean IsNoAbundant = false;
                     IsNoAbundant = IsNumberAbundant(no);
                     if(IsNoAbundant == true)
                     {
-                        System.out.println(no + " IS an Abdundant Number!");
+                        System.out.println(no + " IS an Abundant Number!");
                     }
                     else
                     {
@@ -141,7 +260,20 @@ class UltimateNumberCheckerProgram
                     }
                 break;
                 case 2:
-                    System.out.println("AUTOMORPHIC NUMBER CHECKER");
+                    System.out.println("ARMSTRONG NUMBER?");
+                    boolean IsNoArmstrong = false;
+                    IsNoArmstrong = IsNumberArmstrong(no);
+                    if(IsNoArmstrong == true)
+                    {
+                        System.out.println(no + " IS an Armstrong Number!");
+                    }
+                    else
+                    {
+                        System.out.println(no + " ISN'T an Armstrong Number!");
+                    }
+                break;
+                case 3:
+                    System.out.println("AUTOMORPHIC NUMBER?");
                     boolean IsNoAutomorphic = false;
                     IsNoAutomorphic = IsNumberAutomorphic(no);
                     if(IsNoAutomorphic == true)
@@ -151,6 +283,45 @@ class UltimateNumberCheckerProgram
                     else
                     {
                         System.out.println(no + " ISN'T an Automorphic Number!");
+                    }
+                break;
+                case 4:
+                    System.out.println("DEFICIENT NUMBER?");
+                    boolean IsNoDeficient = false;
+                    IsNoDeficient = IsNumberDeficient(no);
+                    if(IsNoDeficient == true)
+                    {
+                        System.out.println(no + " IS a Deficient Number!");
+                    }
+                    else
+                    {
+                        System.out.println(no + " ISN'T a Deficient Number!");
+                    }
+                break;
+                case 5:
+                    System.out.println("DISARIUM NUMBER?");
+                    boolean IsNoDisarium = false;
+                    IsNoDisarium = IsNumberDisarium(no);
+                    if(IsNoDisarium == true)
+                    {
+                        System.out.println(no + " IS a Disarium Number!");
+                    }
+                    else
+                    {
+                        System.out.println(no + " ISN'T a Disarium Number!");
+                    }
+                break;
+                case 6:
+                    System.out.println("HARSHAD NUMBER?");
+                    boolean IsNoHarshad = false;
+                    IsNoHarshad = IsNumberHarshad(no);
+                    if(IsNoHarshad == true)
+                    {
+                        System.out.println(no + " IS a Harshad Number!");
+                    }
+                    else
+                    {
+                        System.out.println(no + " ISN'T a Harshad Number!");
                     }
                 break;
                 default:
@@ -163,5 +334,5 @@ class UltimateNumberCheckerProgram
             System.out.println("\n");
         }
         while (restart == 'Y' || restart == 'y');
-        }
+    }
 }
